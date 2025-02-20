@@ -75,37 +75,34 @@ class _FoodMenuPageState extends State<FoodMenuPage> {
       scrollDirection: Axis.horizontal,
       child: Row(
         children: [
+          // Add "All" category
           GestureDetector(
             onTap: () {
               setState(() {
-                selectedCategory = 'All';
-                _filterMenuItemsByCategory(selectedCategory);
+                selectedCategory = 'All'; // Update selected category
+                _filterMenuItemsByCategory(selectedCategory); // Filter items
               });
             },
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
+            child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               margin: const EdgeInsets.symmetric(horizontal: 8),
               decoration: BoxDecoration(
-                gradient: selectedCategory == 'All'
-                    ? const LinearGradient(colors: [Colors.green, Colors.teal])
-                    : null,
-                color: selectedCategory == 'All' ? null : Colors.grey[200],
+                color: selectedCategory == 'All'
+                    ? Colors.redAccent
+                    : Colors.grey[200],
                 borderRadius: BorderRadius.circular(10),
-                boxShadow: selectedCategory == 'All'
-                    ? [BoxShadow(color: Colors.green.shade900, blurRadius: 5)]
-                    : [],
               ),
               child: Text(
                 'All',
                 style: TextStyle(
                   color:
-                      selectedCategory == 'All' ? Colors.white : Colors.black,
+                  selectedCategory == 'All' ? Colors.white : Colors.black,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
           ),
+          // Dynamic categories
           if (isCategoriesLoading)
             const CircularProgressIndicator()
           else
@@ -114,28 +111,18 @@ class _FoodMenuPageState extends State<FoodMenuPage> {
               return GestureDetector(
                 onTap: () {
                   setState(() {
-                    selectedCategory = category['name'];
-                    _filterMenuItemsByCategory(category['key']);
+                    selectedCategory =
+                    category['name']; // Update selected category
+                    _filterMenuItemsByCategory(
+                        category['key']); // Use the internal key for filtering
                   });
                 },
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   margin: const EdgeInsets.symmetric(horizontal: 8),
                   decoration: BoxDecoration(
-                    gradient: isSelected
-                        ? const LinearGradient(
-                            colors: [Colors.orange, Colors.redAccent])
-                        : null,
-                    color: isSelected ? null : Colors.grey[200],
+                    color: isSelected ? Colors.redAccent : Colors.grey[200],
                     borderRadius: BorderRadius.circular(10),
-                    boxShadow: isSelected
-                        ? [
-                            BoxShadow(
-                                color: Colors.orange.shade900, blurRadius: 5)
-                          ]
-                        : [],
                   ),
                   child: Text(
                     category['name'],
@@ -169,7 +156,7 @@ class _FoodMenuPageState extends State<FoodMenuPage> {
                   'description': item['description'] ?? 'Delicious food item.',
                   'price': '₹ ${item['price']}',
                   'imagePath':
-                      'https://firebasestorage.googleapis.com/v0/b/doodleshomes-7ffe2.appspot.com/o/images%2Fcaesarsalad.png?alt=media&token=7489dc2a-6cde-4a48-95c7-86b8857e6bfe',
+                  'https://firebasestorage.googleapis.com/v0/b/doodleshomes-7ffe2.appspot.com/o/images%2Fcaesarsalad.png?alt=media&token=7489dc2a-6cde-4a48-95c7-86b8857e6bfe',
                   'category': '${item['categoryId']}'
                 });
               }
@@ -204,7 +191,7 @@ class _FoodMenuPageState extends State<FoodMenuPage> {
   int _getCartItemQuantity(String title) {
     final item = cartItems.firstWhere((cartItem) => cartItem['title'] == title,
         orElse: () => {} // Return an empty map if no matching item is found
-        );
+    );
     return item.isNotEmpty
         ? item['quantity']
         : 0; // Check if the item is not empty
@@ -227,120 +214,118 @@ class _FoodMenuPageState extends State<FoodMenuPage> {
   Widget _cartPage() {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Cart', style: TextStyle(color: Colors.white)),
-        backgroundColor: Colors.green,
-        centerTitle: true,
+        title: const Text(
+          'Cart',
+          style: TextStyle(
+            color: Colors.white, // White title text
+            fontWeight: FontWeight.bold, // Bold title text
+          ),
+        ),
+        backgroundColor: Colors.lightGreen[400], // AppBar background color
       ),
       body: Column(
         children: [
           Expanded(
             child: cartItems.isEmpty
                 ? const Center(
-                    child: Text(
-                      'Your cart is empty.',
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey),
-                    ),
-                  )
+              child: Text(
+                'Your cart is empty.',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+            )
                 : ListView.builder(
-                    padding: const EdgeInsets.all(12.0),
-                    itemCount: cartItems.length,
-                    itemBuilder: (context, index) {
-                      final item = cartItems[index];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 6.0),
-                        child: Dismissible(
-                          key: Key('${item['title']}_$index'),
-                          direction: DismissDirection.horizontal,
-                          onDismissed: (direction) {
-                            final removedItem = cartItems[index];
-                            setState(() {
-                              cartItems.removeAt(index);
-                              isCartActive = cartItems.isNotEmpty;
-                            });
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                    '${removedItem['title']} removed from cart!'),
-                                duration: const Duration(seconds: 2),
-                              ),
-                            );
-                          },
-                          background: ClipRRect(
-                            borderRadius: BorderRadius.circular(10.0),
-                            child: Container(
-                              color: Colors.green,
-                              alignment: Alignment.centerLeft,
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16.0),
-                              child:
-                                  const Icon(Icons.delete, color: Colors.white),
-                            ),
-                          ),
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0)),
-                            elevation: 3,
-                            shadowColor: Colors.greenAccent,
-                            child: ListTile(
-                              contentPadding: const EdgeInsets.all(12.0),
-                              title: Text(
-                                item['title'],
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 16),
-                              ),
-                              trailing: Text(
-                                '${item['price']} x ${item['quantity']}',
-                                style: const TextStyle(
-                                    color: Colors.green,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ),
+              itemCount: cartItems.length,
+              itemBuilder: (context, index) {
+                final item = cartItems[index];
+                return Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 8.0,
+                    horizontal: 8.0,
+                  ),
+                  child: Dismissible(
+                    key: Key('${item['title']}_$index'),
+                    direction: DismissDirection.horizontal,
+                    onDismissed: (direction) {
+                      final removedItem = cartItems[index];
+                      setState(() {
+                        cartItems.removeAt(index);
+                        isCartActive = cartItems.isNotEmpty; // Update isCartActive
+                      });
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('${removedItem['title']} removed from cart!'),
+                          duration: const Duration(seconds: 2),
                         ),
                       );
                     },
+                    background: ClipRRect(
+                      borderRadius: BorderRadius.circular(10.0),
+                      child: Container(
+                        color: Colors.redAccent,
+                        alignment: Alignment.centerLeft,
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: const Icon(Icons.delete, color: Colors.white),
+                      ),
+                    ),
+                    child: Card(
+                      child: ListTile(
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              item['title'],
+                              style: const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              '${item['price']} x ${item['quantity']}',
+                              style: const TextStyle(color: Colors.green),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
+                );
+              },
+            ),
           ),
+          // Add the "Proceed for Booking" button here
           Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.all(16.0),
             child: SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
                   if (cartItems.isEmpty) {
+                    // Show a toast message if the cart is empty
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content:
-                            Text('Your cart is empty! Add items to proceed.'),
+                        content: Text('Your cart is empty! Add items to proceed.'),
                         duration: Duration(seconds: 2),
                       ),
                     );
                   } else {
+                    // Navigate to the DateTimePickerPage with cartItems
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            DateTimePickerPage(cartItems: cartItems),
+                        builder: (context) => DateTimePickerPage(cartItems: cartItems),
                       ),
                     );
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 18),
+                  backgroundColor: Colors.orange[300],
+                  padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.0)),
-                  backgroundColor: Colors.green,
-                  elevation: 5,
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
                 ),
                 child: const Text(
                   "Proceed for Booking",
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 18.0,
+                    fontSize: 17.0,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -358,193 +343,134 @@ class _FoodMenuPageState extends State<FoodMenuPage> {
       title: "Food Menu",
       appBarActions: IconButton(
         icon: const Icon(Icons.shopping_cart),
-        color: Colors.green,
-        iconSize: 30,
         onPressed: () {
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => _cartPage()));
         },
       ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color.fromARGB(255, 225, 231, 225),
-              Color.fromARGB(255, 91, 105, 92)
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+      body: Column(
+        children: [
+          const SizedBox(
+            height: 8.0,
           ),
-        ),
-        child: Column(
-          children: [
-            const SizedBox(height: 8.0),
-            _buildCategorySlider(),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: TextField(
-                controller: _searchController,
-                onChanged: _filterMenuItems,
-                decoration: InputDecoration(
-                  hintText: 'Search for dishes...',
-                  hintStyle: TextStyle(color: Colors.grey.shade600),
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: BorderSide.none,
-                  ),
-                  suffixIcon: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 300),
-                    child: _searchController.text.isEmpty
-                        ? const Icon(Icons.search, color: Colors.green)
-                        : IconButton(
-                            icon: const Icon(Icons.clear,
-                                color: Colors.redAccent),
-                            onPressed: () {
-                              setState(() {
-                                _searchController.clear();
-                                _filterMenuItems('');
-                              });
+          _buildCategorySlider(),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: TextField(
+              controller: _searchController,
+              onChanged: _filterMenuItems,
+              decoration: const InputDecoration(
+                hintText: 'Search for dishes...',
+                border: OutlineInputBorder(),
+                suffixIcon: Icon(Icons.search),
+              ),
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: filteredMenuItems.length,
+              itemBuilder: (context, index) {
+                final item = filteredMenuItems[index];
+                int quantity = _getCartItemQuantity(item['title']);
+
+                return Card(
+                  margin: const EdgeInsets.all(10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      ClipRRect(
+                        borderRadius:
+                        const BorderRadius.vertical(top: Radius.circular(20.0)),
+                        child: SizedBox(
+                          height: 150,
+                          child: Image.network(
+                            item['imagePath'],
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) =>
+                            const Icon(Icons.error), // Error placeholder
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return const Center(child: CircularProgressIndicator());
                             },
                           ),
-                  ),
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: BorderSide(
-                        color: Colors.greenAccent.shade100, width: 2),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: const BorderSide(color: Colors.green, width: 2),
-                  ),
-                ),
-              ),
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: filteredMenuItems.length,
-                itemBuilder: (context, index) {
-                  final item = filteredMenuItems[index];
-                  int quantity = _getCartItemQuantity(item['title']);
-
-                  return Card(
-                    color: Colors.green.shade200,
-                    margin: const EdgeInsets.all(10),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        ClipRRect(
-                          borderRadius: const BorderRadius.vertical(
-                              top: Radius.circular(15.0)),
-                          child: SizedBox(
-                            height: 150,
-                            child: Image.network(
-                              item['imagePath'],
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) =>
-                                  const Icon(Icons.error),
-                              loadingBuilder:
-                                  (context, child, loadingProgress) {
-                                if (loadingProgress == null) return child;
-                                return const Center(
-                                    child: CircularProgressIndicator());
-                              },
-                            ),
-                          ),
                         ),
-                        ListTile(
-                          title: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(item['title'],
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold)),
-                              Text(item['price'],
-                                  style: const TextStyle(color: Colors.green)),
-                            ],
-                          ),
-                          subtitle: quantity == 0
-                              ? ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.green.shade700,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0)),
+                      ),
+                      ListTile(
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(item['title'],
+                                style: const TextStyle(fontWeight: FontWeight.bold)),
+                            Text(item['price'],
+                                style: const TextStyle(color: Colors.green)),
+                          ],
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 5),
+                            quantity == 0
+                                ? ElevatedButton(
+                              onPressed: () {
+                                setState(() {
+                                  cartItems.add({...item, 'quantity': 1});
+                                  isCartActive = true; // Set cart active
+                                });
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                        '${item['title']} added to cart!'),
+                                    duration: const Duration(seconds: 2),
                                   ),
-                                  onPressed: () {
-                                    setState(() {
-                                      cartItems.add({...item, 'quantity': 1});
-                                      isCartActive = true;
-                                    });
-                                  },
-                                  child: const Text('Add to Cart',
-                                      style: TextStyle(color: Colors.white)),
-                                )
-                              : _buildQuantityControls(item),
+                                );
+                              },
+                              child: const Text('Add to Cart'),
+                            )
+                                : _buildQuantityControls(item),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+          const SizedBox(
+            height: 16.0,
+          ),
+          // Add the Book button here
+          if (isCartActive)
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => _cartPage()),
                   );
                 },
-              ),
-            ),
-            if (isCartActive)
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => _cartPage()),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.transparent,
-                    shadowColor: Colors.greenAccent,
-                    elevation: 10,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0)),
-                  )..copyWith(
-                      backgroundColor:
-                          MaterialStateProperty.resolveWith((states) {
-                        if (states.contains(MaterialState.pressed)) {
-                          return Colors.green.shade900;
-                        }
-                        return null;
-                      }),
-                    ),
-                  child: Ink(
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFF00C853), Color(0xFF64DD17)],
-                      ),
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: Container(
-                      constraints:
-                          const BoxConstraints(minWidth: 88.0, minHeight: 36.0),
-                      alignment: Alignment.center,
-                      child: const Text(
-                        "View Cart",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.grey[200],
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0)),
+                ),
+                child: const Text(
+                  "View Cart",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16.0,
                   ),
                 ),
               ),
-          ],
-        ),
+            ),
+          const SizedBox(
+            height: 16.0,
+          ),
+        ],
       ),
     );
   }
@@ -563,7 +489,7 @@ class _FoodMenuPageState extends State<FoodMenuPage> {
               onPressed: () {
                 setState(() {
                   final index = cartItems.indexWhere(
-                      (cartItem) => cartItem['title'] == item['title']);
+                          (cartItem) => cartItem['title'] == item['title']);
                   if (index != -1) {
                     if (cartItems[index]['quantity'] > 1) {
                       cartItems[index]['quantity']--;
@@ -581,7 +507,7 @@ class _FoodMenuPageState extends State<FoodMenuPage> {
               onPressed: () {
                 setState(() {
                   final index = cartItems.indexWhere(
-                      (cartItem) => cartItem['title'] == item['title']);
+                          (cartItem) => cartItem['title'] == item['title']);
                   if (index != -1) {
                     cartItems[index]['quantity']++; // Increase quantity
                   } else {

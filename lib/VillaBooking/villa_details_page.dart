@@ -204,13 +204,13 @@ class _VillaDetailsPageState extends State<VillaDetailsPage> {
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Text(title,
           style: const TextStyle(
-              fontSize: 20, fontWeight: FontWeight.bold, color: Colors.green)),
+              fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black)),
     );
   }
 
   Widget _buildFacilityItem(IconData icon, String text) {
     return Chip(
-      backgroundColor: Colors.green[200],
+      backgroundColor: Colors.lightGreen[100],
       avatar: Icon(icon, color: Colors.green[900]),
       label: Text(text,
           style: TextStyle(

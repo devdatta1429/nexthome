@@ -45,9 +45,9 @@ class _FoodServiceOptionState extends State<FoodServiceOption> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.green[700],
+        backgroundColor: Colors.lightGreen[400],
         title: const Text(
-          'Foodie App',
+          'Food Court',
           style: TextStyle(
             color: Colors.white,
             fontSize: 26,
@@ -62,8 +62,8 @@ class _FoodServiceOptionState extends State<FoodServiceOption> {
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Color(0XFFDCEDC8),
-              Color(0XFF388E3C)
+              Colors.white,
+              Colors.white60,
             ], // Light Green to Dark Green
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -73,12 +73,29 @@ class _FoodServiceOptionState extends State<FoodServiceOption> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 16),
-            const Text('Choose Your Option', style: _headerTextStyle),
-            const SizedBox(height: 8),
+
+            // Apply color to "Choose Your Option"
             const Text(
-              "Welcome to Foodie App! Whether you're dining in, ordering for home delivery, or planning a bulk order for an event, we've got you covered.",
+              'Choose Your Option :',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.black, // Change the color here
+              ),
+            ),
+
+            const SizedBox(height: 8),
+
+            // Apply color to the welcome message
+            const Text(
+              "Welcome to Food Court! Whether you're dining in, ordering for "
+                  "home delivery, or planning a bulk order for an event, we've got you covered.",
               textAlign: TextAlign.justify,
-              style: _subHeaderTextStyle,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.black, // Change the color here
+              ),
             ),
             const SizedBox(height: 40),
             _buildOptionButton(
@@ -115,7 +132,7 @@ class _FoodServiceOptionState extends State<FoodServiceOption> {
         decoration: BoxDecoration(
           gradient: isSelected
               ? LinearGradient(
-                  colors: [Colors.green[800]!, Colors.green[500]!],
+                  colors: [Colors.lightGreen[300]!, Colors.green[500]!],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight)
               : LinearGradient(

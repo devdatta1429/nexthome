@@ -10,7 +10,7 @@ class FoodDetailPage extends StatelessWidget {
   final double grandTotal;
   final String status;
 
-  const FoodDetailPage({super.key, 
+  const FoodDetailPage({super.key,
     required this.orderTime,
     required this.deliveryDate,
     required this.deliveryTime,
@@ -24,13 +24,13 @@ class FoodDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     // Number formatting for currency
     final currencyFormat =
-        NumberFormat.currency(locale: 'en_IN', symbol: 'Rs ', decimalDigits: 2);
+    NumberFormat.currency(locale: 'en_IN', symbol: 'Rs ', decimalDigits: 2);
     double parsePrice(String price) {
       // Remove "Rs " prefix and any non-numeric characters
       return double.tryParse(price
-              .replaceAll('Rs ', '')
-              .replaceAll('-', '')
-              .replaceAll(RegExp(r'[^\d.]'), '')) ??
+          .replaceAll('Rs ', '')
+          .replaceAll('-', '')
+          .replaceAll(RegExp(r'[^\d.]'), '')) ??
           0.0;
     }
 
