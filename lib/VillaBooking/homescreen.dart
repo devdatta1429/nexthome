@@ -170,7 +170,7 @@ class _CarouselScreenState extends State<CarouselScreen> {
         margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
         decoration: BoxDecoration(
           border: Border.all(
-              color: isDisabled ? Colors.grey : Color(0xFF4CAF50), width: 2),
+              color: isDisabled ? Colors.grey : Colors.blueGrey, width: 3),
           borderRadius: BorderRadius.circular(25),
           boxShadow: [
             BoxShadow(
@@ -200,7 +200,7 @@ class _CarouselScreenState extends State<CarouselScreen> {
               ),
             ),
             Container(
-              height: 130, // Set the desired height
+              height: 110, // Set the desired height
               width: 500,  // Set the desired width
               padding: const EdgeInsets.only(left: 15.0,top: 5),
               decoration: BoxDecoration(
@@ -213,10 +213,14 @@ class _CarouselScreenState extends State<CarouselScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildVillaText(snapshot.child('villaName').value.toString(), isDisabled, fontSize: 20),
-                  _buildVillaText("${snapshot.child('villaSize').value}BHK | 10 Guests", isDisabled,fontSize: 16),
-                  _buildVillaText('Price: ${snapshot.child('villaPrice').value} /- per night', isDisabled, fontSize: 16),
-                  _buildVillaText('Location: Lonavala', isDisabled, fontSize: 16),
+                  _buildVillaText(snapshot.child('villaName').value.toString
+                    (), isDisabled, fontSize: 18),
+                  _buildVillaText("${snapshot.child('villaSize').value}BHK | "
+                      "10 Guests", isDisabled,fontSize: 13),
+                  _buildVillaText('Price: ${snapshot.child('villaPrice')
+                      .value} /- per night', isDisabled, fontSize: 13),
+                  _buildVillaText('Location: Lonavala', isDisabled, fontSize:
+                  13),
                 ],
               ),
             ),

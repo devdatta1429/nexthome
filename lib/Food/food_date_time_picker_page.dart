@@ -26,7 +26,6 @@ class _DateTimePickerPageState extends State<DateTimePickerPage> {
     super.initState();
     _initializeSharedPreferences();
   }
-
   @override
   void dispose() {
     villaNameController.dispose();
@@ -54,6 +53,7 @@ class _DateTimePickerPageState extends State<DateTimePickerPage> {
 
   // Method to select date
   Future<void> _selectDate(BuildContext context) async {
+
     if (role == "user" && !isCodeVerified) {
       _showCodeEntryDialog(context);
       return;
@@ -68,7 +68,7 @@ class _DateTimePickerPageState extends State<DateTimePickerPage> {
         return Theme(
           data: ThemeData.light().copyWith(
             colorScheme: const ColorScheme.light(
-              primary: Colors.green,
+              primary: Colors.redAccent,
               onPrimary: Colors.white,
               onSurface: Colors.black,
             ),
@@ -87,6 +87,7 @@ class _DateTimePickerPageState extends State<DateTimePickerPage> {
 
   // Method to select time
   Future<void> _selectTime(BuildContext context) async {
+
     if (role == "user" && !isCodeVerified) {
       _showCodeEntryDialog(context);
       return;
@@ -99,7 +100,7 @@ class _DateTimePickerPageState extends State<DateTimePickerPage> {
         return Theme(
           data: ThemeData.light().copyWith(
             colorScheme: const ColorScheme.light(
-              primary: Colors.green,
+              primary: Colors.redAccent,
               onSurface: Colors.black,
             ),
           ),
@@ -151,8 +152,7 @@ class _DateTimePickerPageState extends State<DateTimePickerPage> {
               },
             ),
             ElevatedButton(
-              style:
-                  ElevatedButton.styleFrom(backgroundColor: Color(0xFF4A7C59)),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
               child: const Text('Submit'),
               onPressed: () {
                 if (codeController.text == "1234") {
@@ -161,8 +161,7 @@ class _DateTimePickerPageState extends State<DateTimePickerPage> {
                   });
                   Navigator.of(context).pop();
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        content: Text('Code verified successfully!')),
+                    const SnackBar(content: Text('Code verified successfully!')),
                   );
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -177,21 +176,27 @@ class _DateTimePickerPageState extends State<DateTimePickerPage> {
     );
   }
 
+
+
   @override
   Widget build(BuildContext context) {
+
     if (isLoading) {
       return const Scaffold(
         body: Center(
           child: CircularProgressIndicator(
-            color: Colors.green,
+            color: Colors.redAccent,
           ),
         ),
       );
     }
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Select Date & Time'),
-        backgroundColor: Colors.green,
+        title: const Text('Select Date & Time',style: TextStyle(
+          color: Colors.white, // White title text
+          fontWeight: FontWeight.bold, // Bold title text
+        ),),
+        backgroundColor: Colors.lightGreen[400],
         elevation: 0,
       ),
       body: SingleChildScrollView(
@@ -200,11 +205,22 @@ class _DateTimePickerPageState extends State<DateTimePickerPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              Container(
+                width: double.infinity,
+                height: 180,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(
+                        'https://img.freepik.com/free-vector/schedule-calendar-flat-style_78370-1550.jpg'),
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
               GestureDetector(
                 onTap: () => _selectDate(context),
                 child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 20, horizontal: 25),
+                  padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 25),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(15),
@@ -230,8 +246,7 @@ class _DateTimePickerPageState extends State<DateTimePickerPage> {
                               : Colors.black87,
                         ),
                       ),
-                      const Icon(Icons.calendar_today,
-                          color: Color(0xFF4A7C59)),
+                      const Icon(Icons.calendar_today, color: Colors.redAccent),
                     ],
                   ),
                 ),
@@ -240,8 +255,7 @@ class _DateTimePickerPageState extends State<DateTimePickerPage> {
               GestureDetector(
                 onTap: () => _selectTime(context),
                 child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 20, horizontal: 25),
+                  padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 25),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(15),
@@ -267,7 +281,7 @@ class _DateTimePickerPageState extends State<DateTimePickerPage> {
                               : Colors.black87,
                         ),
                       ),
-                      const Icon(Icons.access_time, color: Color(0xFF4A7C59)),
+                      const Icon(Icons.access_time, color: Colors.redAccent),
                     ],
                   ),
                 ),
@@ -279,12 +293,10 @@ class _DateTimePickerPageState extends State<DateTimePickerPage> {
                   borderRadius: BorderRadius.circular(15),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey
-                          .withOpacity(0.3), // Shadow color with opacity
+                      color: Colors.grey.withOpacity(0.3), // Shadow color with opacity
                       spreadRadius: 2, // How far the shadow spreads
                       blurRadius: 5, // Softness of the shadow
-                      offset:
-                          const Offset(2, 3), // Position of the shadow (x, y)
+                      offset: const Offset(2, 3), // Position of the shadow (x, y)
                     ),
                   ],
                 ),
@@ -302,23 +314,18 @@ class _DateTimePickerPageState extends State<DateTimePickerPage> {
                       fontSize: 14,
                       color: Colors.grey[500],
                     ),
-                    prefixIcon: const Icon(Icons.home_outlined,
-                        color: Color(0xFF4A7C59)),
+                    prefixIcon: const Icon(Icons.home_outlined, color: Colors.redAccent),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15),
-                      borderSide:
-                          BorderSide.none, // No border as shadow provides depth
+                      borderSide: BorderSide.none, // No border as shadow provides depth
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15),
-                      borderSide:
-                          const BorderSide(color: Color(0xFF4A7C59), width: 2),
+                      borderSide: const BorderSide(color: Colors.redAccent, width: 2),
                     ),
-                    contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 18),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
                     filled: true,
-                    fillColor: Colors
-                        .transparent, // Transparent to use the container's background color
+                    fillColor: Colors.transparent, // Transparent to use the container's background color
                   ),
                   style: const TextStyle(fontSize: 16, color: Colors.black87),
                 ),
@@ -338,38 +345,32 @@ class _DateTimePickerPageState extends State<DateTimePickerPage> {
                 villaNameController.text,
                 style: TextStyle(
                   fontSize: 20,
-                  color: villaNameController.text.isNotEmpty
-                      ? Colors.black87
-                      : Colors.grey,
-                  fontStyle: villaNameController.text.isNotEmpty
-                      ? FontStyle.normal
-                      : FontStyle.italic,
+                  color: villaNameController.text.isNotEmpty ? Colors.black87 : Colors.grey,
+                  fontStyle: villaNameController.text.isNotEmpty ? FontStyle.normal : FontStyle.italic,
                 ),
-              ),
-              const SizedBox(height: 40),
+              ),              const SizedBox(height: 40),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                  padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),
-                  backgroundColor: Color(0xFF4A7C59),
+                  backgroundColor: Colors.redAccent,
                 ),
                 onPressed: selectedDate != null && selectedTime != null
                     ? () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => FoodBillSummaryPage(
-                              cartItems: widget.cartItems,
-                              date: selectedDate,
-                              time: selectedTime,
-                              villaName: villaNameController.text,
-                            ),
-                          ),
-                        );
-                      }
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FoodBillSummaryPage(
+                        cartItems: widget.cartItems,
+                        date: selectedDate,
+                        time: selectedTime,
+                        villaName: villaNameController.text,
+                      ),
+                    ),
+                  );
+                }
                     : null,
                 child: const Text(
                   'Confirm',

@@ -42,8 +42,7 @@ class _FoodBookingState extends State<FoodBooking> {
   Future<void> _fetchBookedServices() async {
     final prefs = await SharedPreferences.getInstance();
     final userPhoneNumber = prefs.getString('userPhoneNumber');
-    DatabaseReference databaseRef =
-        FirebaseDatabase.instance.ref('foodOrders/$userPhoneNumber');
+    DatabaseReference databaseRef = FirebaseDatabase.instance.ref('foodOrders/$userPhoneNumber');
 
     if (userPhoneNumber != null) {
       try {
@@ -72,9 +71,8 @@ class _FoodBookingState extends State<FoodBooking> {
                     : booking['gstAmount'] as double?;
                 final orderCount = booking['count'] as int?;
 
-                if (orderTime != null &&
-                    totalCost != null &&
-                    orderCount != null) {
+                if (orderTime != null && totalCost != null && orderCount != null) {
+
                   bookings.add({
                     'orderTime': orderTime,
                     'totalCost': totalCost,
@@ -91,8 +89,7 @@ class _FoodBookingState extends State<FoodBooking> {
                 }
               }
             }
-            bookings.sort(
-                (a, b) => (b['count'] as int).compareTo(a['count'] as int));
+            bookings.sort((a, b) => (b['count'] as int).compareTo(a['count'] as int));
 
             // bookings.sort((a, b) {
             //   DateTime? aTime = a['deliveryDateTime'] as DateTime?;
@@ -129,7 +126,6 @@ class _FoodBookingState extends State<FoodBooking> {
       });
     }
   }
-
   Future<void> _refreshPage() async {
     await _initializeSharedPreferences();
     ScaffoldMessenger.of(context).showSnackBar(
@@ -178,32 +174,31 @@ class _FoodBookingState extends State<FoodBooking> {
         child: isLoading
             ? const Center(child: CircularProgressIndicator())
             : bookings.isNotEmpty
-                ? ListView.builder(
-                    itemCount: bookings.length,
-                    itemBuilder: (context, index) {
-                      final order = bookings[index];
-                      return OrderCard(
-                        orderTime: order['orderTime'] as String? ?? '',
-                        totalCost: order['totalCost'] as double? ?? 0.0,
-                        gstAmount: order['gstAmount'] as double? ?? 0.0,
-                        grandTotal: order['grandTotal'] as double? ?? 0.0,
-                        deliveryDate: order['deliveryDate'] as String? ?? '',
-                        deliveryTime: order['deliveryTime'] as String? ?? '',
-                        orderDetails: order['items'] as List<dynamic>? ?? [],
-                        status: _getStatusText(order['status'] as String? ??
-                            ''), // Pass status text
-                        statusColor: _getStatusColor(
-                            order['status'] as String? ??
-                                ''), // Pass status color
-                      );
-                    },
-                  )
-                : const Center(
-                    child: Text(
-                      "No orders yet",
-                      style: TextStyle(fontSize: 18, color: Colors.grey),
-                    ),
-                  ),
+            ? ListView.builder(
+          itemCount: bookings.length,
+          itemBuilder: (context, index) {
+            final order = bookings[index];
+            return OrderCard(
+              orderTime: order['orderTime'] as String? ?? '',
+              totalCost: order['totalCost'] as double? ?? 0.0,
+              gstAmount: order['gstAmount'] as double? ?? 0.0,
+              grandTotal: order['grandTotal'] as double? ?? 0.0,
+              deliveryDate: order['deliveryDate'] as String? ?? '',
+              deliveryTime: order['deliveryTime'] as String? ?? '',
+              orderDetails: order['items'] as List<dynamic>? ?? [],
+              status: _getStatusText(
+                  order['status'] as String? ?? ''), // Pass status text
+              statusColor: _getStatusColor(
+                  order['status'] as String? ?? ''), // Pass status color
+            );
+          },
+        )
+            : const Center(
+          child: Text(
+            "No orders yet",
+            style: TextStyle(fontSize: 18, color: Colors.grey),
+          ),
+        ),
       ),
     );
   }
@@ -220,8 +215,7 @@ class OrderCard extends StatelessWidget {
   final String status;
   final Color statusColor;
 
-  const OrderCard({
-    super.key,
+  const OrderCard({super.key,
     required this.orderTime,
     required this.totalCost,
     required this.gstAmount,
@@ -237,7 +231,7 @@ class OrderCard extends StatelessWidget {
   Widget build(BuildContext context) {
     // Number formatting for currency
     final currencyFormat =
-        NumberFormat.currency(locale: 'en_IN', symbol: 'Rs ', decimalDigits: 2);
+    NumberFormat.currency(locale: 'en_IN', symbol: 'Rs ', decimalDigits: 2);
 
     return GestureDetector(
       onTap: () {

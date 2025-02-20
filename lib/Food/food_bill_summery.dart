@@ -12,8 +12,7 @@ class FoodBillSummaryPage extends StatefulWidget {
   final TimeOfDay? time;
   String? villaName;
 
-  FoodBillSummaryPage({
-    super.key,
+  FoodBillSummaryPage({super.key,
     required this.cartItems,
     this.date,
     this.time,
@@ -96,7 +95,7 @@ class _FoodBillSummaryPageState extends State<FoodBillSummaryPage> {
         ? DateFormat('yMMMMd').format(widget.date!)
         : 'No date selected';
     String formattedTime =
-        widget.time != null ? widget.time!.format(context) : 'No time selected';
+    widget.time != null ? widget.time!.format(context) : 'No time selected';
 
     return Scaffold(
       appBar: AppBar(
@@ -128,40 +127,29 @@ class _FoodBillSummaryPageState extends State<FoodBillSummaryPage> {
               ),
             ),
             const SizedBox(height: 8),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Row(
               children: [
                 Text(
                   '$formattedDate at $formattedTime', // Display formatted date and time
                   style: const TextStyle(fontSize: 14, color: Colors.black54),
                 ),
-                SizedBox(
-                  height: 10,
+                const SizedBox(width: 20,),
+                const Text("Diliver On :- ", style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.blueGrey,
+                  fontWeight: FontWeight.bold,
+                ),),
+                Text(
+                  widget.villaName ?? 'No Villa Selected',
+                  textAlign: TextAlign.end, // Align villa name to the end
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.blueGrey,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  overflow: TextOverflow.ellipsis, // Handle overflow gracefully
+                  maxLines: 1,
                 ),
-                Row(
-                  children: [
-                    const Text(
-                      "Diliver On :- ",
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.blueGrey,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      widget.villaName ?? 'No Villa Selected',
-                      textAlign: TextAlign.end, // Align villa name to the end
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Colors.blueGrey,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      overflow:
-                          TextOverflow.ellipsis, // Handle overflow gracefully
-                      maxLines: 1,
-                    ),
-                  ],
-                )
               ],
             ),
             const SizedBox(height: 16),
@@ -218,95 +206,90 @@ class _FoodBillSummaryPageState extends State<FoodBillSummaryPage> {
                 onPressed: isProcessing
                     ? null // Disable the button when processing
                     : () async {
-                        setState(() {
-                          isProcessing = true; // Disable the button
-                        });
+                  setState(() {
+                    isProcessing = true; // Disable the button
+                  });
 
-                        try {
-                          if (userPhoneNumber == null) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text('User phone number not found')),
-                            );
-                            return;
-                          }
+                  try {
+                    if (userPhoneNumber == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text('User phone number not found')),
+                      );
+                      return;
+                    }
 
-                          final dateTime = DateFormat('yyyy-MM-dd-HH:mm')
-                              .format(DateTime.now());
-                          final countRef =
-                              FirebaseDatabase.instance.ref('food/count');
-                          final countSnapshot = await countRef.get();
+                    final dateTime = DateFormat('yyyy-MM-dd-HH:mm')
+                        .format(DateTime.now());
+                    final countRef =
+                    FirebaseDatabase.instance.ref('food/count');
+                    final countSnapshot = await countRef.get();
 
-                          int orderCount = countSnapshot.value as int;
+                    int orderCount = countSnapshot.value as int;
 
-                          final databaseRef = FirebaseDatabase.instance
-                              .ref('foodOrders/$userPhoneNumber')
-                              .child(dateTime);
-                          await databaseRef.set({
-                            'orderDetails': widget.cartItems
-                                .map((item) => {
-                                      'title': item['title'],
-                                      'quantity': item['quantity'],
-                                      'price': item['price'],
-                                    })
-                                .toList(),
-                            'orderTime': dateTime,
-                            'totalCost': totalCost,
-                            'gstAmount': gstAmount,
-                            'grandTotal': grandTotal,
-                            'deliveryDate': formattedDate,
-                            'deliveryTime': formattedTime,
-                            'status': "1",
-                            'count': orderCount,
-                            'villaName': widget.villaName,
-                          }).then((_) async {
-                            if (await _isPermissionGranted()) {
-                              _sendMessage(
-                                userPhoneNumber!,
-                                "Your total bill is ₹ ${grandTotal.toStringAsFixed(2)}",
-                              );
-                            } else {
-                              Fluttertoast.showToast(
-                                msg: "SMS permission not granted!",
-                                toastLength: Toast.LENGTH_LONG,
-                                gravity: ToastGravity.BOTTOM,
-                                backgroundColor: Colors.red,
-                                textColor: Colors.white,
-                                fontSize: 16.0,
-                              );
-                            }
-                          });
+                    final databaseRef = FirebaseDatabase.instance
+                        .ref('foodOrders/$userPhoneNumber')
+                        .child(dateTime);
+                    await databaseRef.set({
+                      'orderDetails': widget.cartItems
+                          .map((item) => {
+                        'title': item['title'],
+                        'quantity': item['quantity'],
+                        'price': item['price'],
+                      })
+                          .toList(),
+                      'orderTime': dateTime,
+                      'totalCost': totalCost,
+                      'gstAmount': gstAmount,
+                      'grandTotal': grandTotal,
+                      'deliveryDate': formattedDate,
+                      'deliveryTime': formattedTime,
+                      'status': "1",
+                      'count': orderCount,
+                      'villaName': widget.villaName,
+                    }).then((_) async {
+                      if (await _isPermissionGranted()) {
+                        _sendMessage(
+                          userPhoneNumber!,
+                          "Your total bill is ₹ ${grandTotal.toStringAsFixed(2)}",
+                        );
+                      } else {
+                        Fluttertoast.showToast(
+                          msg: "SMS permission not granted!",
+                          toastLength: Toast.LENGTH_LONG,
+                          gravity: ToastGravity.BOTTOM,
+                          backgroundColor: Colors.red,
+                          textColor: Colors.white,
+                          fontSize: 16.0,
+                        );
+                      }
+                    });
 
-                          await countRef.set(orderCount + 1);
+                    await countRef.set(orderCount + 1);
 
-                          Navigator.popUntil(context, (route) => route.isFirst);
-                        } catch (e) {
-                          Fluttertoast.showToast(
-                            msg: "An error occurred: $e",
-                            toastLength: Toast.LENGTH_LONG,
-                            gravity: ToastGravity.BOTTOM,
-                            backgroundColor: Colors.red,
-                            textColor: Colors.white,
-                            fontSize: 16.0,
-                          );
-                        } finally {
-                          setState(() {
-                            isProcessing = false; // Enable the button
-                          });
-                        }
-                      },
+                    Navigator.popUntil(context, (route) => route.isFirst);
+                  } catch (e) {
+                    Fluttertoast.showToast(
+                      msg: "An error occurred: $e",
+                      toastLength: Toast.LENGTH_LONG,
+                      gravity: ToastGravity.BOTTOM,
+                      backgroundColor: Colors.red,
+                      textColor: Colors.white,
+                      fontSize: 16.0,
+                    );
+                  } finally {
+                    setState(() {
+                      isProcessing = false; // Enable the button
+                    });
+                  }
+                },
                 style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16.0),
-                    backgroundColor: Color.fromARGB(255, 71, 232, 119)),
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  backgroundColor: Colors.orange[800],
+                ),
                 child: isProcessing
                     ? const CircularProgressIndicator(color: Colors.white)
-                    : const Text(
-                        'Proceed to Payment',
-                        style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black),
-                      ),
+                    : const Text('Proceed to Payment'),
               ),
             ),
           ],

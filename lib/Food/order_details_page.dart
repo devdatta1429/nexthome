@@ -11,8 +11,7 @@ class OrderDetailsPage extends StatefulWidget {
   final double gstAmount;
   final double grandTotal;
 
-  const OrderDetailsPage({
-    super.key,
+  const OrderDetailsPage({super.key,
     required this.orderTime,
     required this.deliveryDate,
     required this.deliveryTime,
@@ -26,8 +25,8 @@ class OrderDetailsPage extends StatefulWidget {
 }
 
 class _OrderDetailsPageState extends State<OrderDetailsPage> {
-  final DatabaseReference _foodBookingsRef =
-      FirebaseDatabase.instance.ref('foodOrders');
+
+  final DatabaseReference _foodBookingsRef = FirebaseDatabase.instance.ref('foodOrders');
 
   String userPhoneNumber = "0";
   String role = "admin";
@@ -120,22 +119,20 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
   @override
   Widget build(BuildContext context) {
     final currencyFormat =
-        NumberFormat.currency(locale: 'en_IN', symbol: 'Rs ', decimalDigits: 2);
+    NumberFormat.currency(locale: 'en_IN', symbol: 'Rs ', decimalDigits: 2);
     double parsePrice(String price) {
       // Remove "Rs " prefix and any non-numeric characters
       return double.tryParse(price
-              .replaceAll('Rs ', '')
-              .replaceAll('-', '')
-              .replaceAll(RegExp(r'[^\d.]'), '')) ??
-          0.0;
+          .replaceAll('Rs ', '')
+          .replaceAll('-', '')
+          .replaceAll(RegExp(r'[^\d.]'), '')) ?? 0.0;
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Order Details',
-            style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text('Order Details', style: TextStyle(fontWeight: FontWeight.bold)),
         centerTitle: true,
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.blueGrey,
       ),
       body: RefreshIndicator(
         onRefresh: _refreshPage,
@@ -146,27 +143,22 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  width: double.infinity,
-                  alignment: Alignment.center,
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.green[100],
+                    color: Colors.blueGrey.shade50,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('Order Time: ${widget.orderTime}',
-                          style: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w500)),
+                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
                       const SizedBox(height: 8),
                       Text('Delivery Date: ${widget.deliveryDate}',
-                          style: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w500)),
+                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
                       const SizedBox(height: 8),
                       Text('Delivery Time: ${widget.deliveryTime}',
-                          style: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w500)),
+                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
                     ],
                   ),
                 ),
@@ -179,14 +171,13 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                     )),
                 const SizedBox(height: 8),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
                   decoration: BoxDecoration(
-                    color: Colors.green[100],
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(8),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black12,
+                        color: Colors.grey.shade300,
                         blurRadius: 5,
                         spreadRadius: 2,
                       )
@@ -197,15 +188,12 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                       const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Qty',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                          Text('Item',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                          Text('Price',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
+                          Text('Qty', style: TextStyle(fontWeight: FontWeight.bold)),
+                          Text('Item', style: TextStyle(fontWeight: FontWeight.bold)),
+                          Text('Price', style: TextStyle(fontWeight: FontWeight.bold)),
                         ],
                       ),
-                      Divider(thickness: 1, color: Colors.grey.shade500),
+                      Divider(thickness: 1, color: Colors.grey.shade300),
                       for (var item in widget.orderDetails)
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 4.0),
@@ -213,20 +201,15 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text('${item['quantity']}',
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey.shade800)),
+                                  style: TextStyle(fontSize: 14, color: Colors.grey.shade800)),
                               Flexible(
                                 child: Text(
                                   item['title'],
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey.shade800),
+                                  style: TextStyle(fontSize: 14, color: Colors.grey.shade800),
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
-                              Text(currencyFormat
-                                  .format(parsePrice(item['price']))),
+                              Text(currencyFormat.format(parsePrice(item['price']))),
                             ],
                           ),
                         ),
@@ -237,7 +220,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.green[100],
+                    color: Colors.blueGrey.shade50,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Column(
@@ -248,8 +231,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                           const Text('GST Amount: ',
                               style: TextStyle(fontWeight: FontWeight.bold)),
                           Text(currencyFormat.format(widget.gstAmount),
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold)),
+                              style: const TextStyle(fontWeight: FontWeight.bold)),
                         ],
                       ),
                       const SizedBox(height: 8),
@@ -274,18 +256,14 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                 Center(
                   child: Text('Status: ${_getStatusText(status)}',
                       style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          color: _getStatusColor(status))),
+                          fontSize: 16, fontWeight: FontWeight.w500, color: _getStatusColor(status))),
                 ),
                 const SizedBox(height: 16), // Add spacing
                 Center(
                   child: ElevatedButton(
-                    onPressed:
-                        _updateStatus, // Call _updateStatus when button is pressed
+                    onPressed: _updateStatus, // Call _updateStatus when button is pressed
                     style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 16.0, horizontal: 40.0),
+                      padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 40.0),
                       backgroundColor: Colors.blueAccent,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
